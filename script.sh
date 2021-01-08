@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Supports 'l' and 'a' flags
+
 # Variables
 file1=file1.txt
 output=script_log.txt
@@ -21,7 +23,6 @@ flags=()
 
 if [[ -z $1 ]]; then
     echo "No args added"
-    exit 1
 else
     for (( i=0 ; i<=${#1} ; i++ )); do
         char=${1:i:i}
@@ -65,11 +66,19 @@ else
     exit 1
 fi
 
-
-for file in *; do
-    echo `basename "$file"`
-done
-
 if [[ "${flags[@]}" =~ "a" ]]; then
-    find "." -path '.*' -print
+    shopt -s dotglob
+fi
+
+if [[ "${flags[@]}" =~ "l" ]]; then
+    for file in *; do
+        echo `basename "$file"`
+    done
+else
+    text=""
+    for file in *; do
+        text+=" `basename "$file"`"
+    done
+
+    echo $text
 fi

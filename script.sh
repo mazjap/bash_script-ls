@@ -6,6 +6,8 @@
 file1=file1.txt
 output=script_log.txt
 
+touch $file1
+
 users=( ["jordan"]="12345" ["steve"]="54321" ["abc"]="123" ["1"]="1" )
 
 # Functions
@@ -22,7 +24,7 @@ log "${0} was run"
 flags=()
 
 if [[ -z $1 ]]; then
-    echo "No args added"
+    echo "Flags are required. Try running 'sh ${0} -af'"
     exit 1 # Remove after submitting assignment
 else
     for (( i=0 ; i<=${#1} ; i++ )); do
@@ -97,28 +99,34 @@ cd logs
 mv "../$output" $output
 
 # Append text to log file
-echo "Adding text" >> $output
+echo "Adding text" >> "../$file1"
 log "file was moved to new directory"
 
 # Print working directory
 echo $PWD
 
-# Move log file and change directory back to base
-mv $output "../$output"
-mv
+mv "$output" "../$output"
 log "file was moved back to prev directory"
 cd ../
 
-# Remove logs directory
 rm -rf logs
+log "remove logs directory"
 
 # Make TXT directory
-mkdir TXT
-cd TXT
+TXT="TXT"
+
+if [[ ! -d "$TXT" ]]; then
+    mkdir $TXT
+fi
+
+cd $TXT
 
 # Move files to TXT directory
-mv "../$file1" $file1
-mv "../$output" $output
+cat "../${file1}" >> $file1
+cat "../${output}" >> $output
+
+rm "../${file1}"
+rm "../${output}"
 
 echo $PWD
 

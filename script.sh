@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Supports 'l' and 'a' flags
+# Supports 'l' and 'a' flags to list files with new lines and to show all files 
 
 # Variables
 file1=file1.txt
@@ -23,6 +23,7 @@ flags=()
 
 if [[ -z $1 ]]; then
     echo "No args added"
+    exit 1 # Remove after submitting assignment
 else
     for (( i=0 ; i<=${#1} ; i++ )); do
         char=${1:i:i}
@@ -32,12 +33,13 @@ else
     done
 fi
 
+echo "Running ${0}" # Remove
 log "running script with flag(s) ${flags}"
 
 # Application Start
 
-echo "Enter username:" && read username
-echo "Enter password:" && read password
+echo "Enter username:" && read username # Take username as arg[2]
+echo "Enter password:" && read password # Prompt pass if username is valid
 
 if [[ ${username} == "" ]] || [[ $password == "" ]]; then
     echo "The entered Username and/or Password was empty. Please try again."
@@ -47,17 +49,18 @@ fi
 
 # Validate username and pass
 
-isValid=0
+isValid=false
 
 for (( i=0 ; i<=${#users} ; i++ )); do
     pass="$users[username]"
     if [[ ${username} == ${users:i:i} ]] && [[ ${password} == pass ]]; then
-        isValid=1
+        isValid=true
+        break
     fi
 done
 
 
-if isValid==1; then
+if [[ $isValid==true ]]; then
     echo "Welcome ${username}"
     log "User ${username} logged in successfully."
 else
@@ -82,3 +85,41 @@ else
 
     echo $text
 fi
+
+
+# To meet assignment requirements
+
+# Create logs directory and change directory
+mkdir logs
+cd logs
+
+# Move log file from base to logs directory
+mv "../$output" $output
+
+# Append text to log file
+echo "Adding text" >> $output
+log "file was moved to new directory"
+
+# Print working directory
+echo $PWD
+
+# Move log file and change directory back to base
+mv $output "../$output"
+mv
+log "file was moved back to prev directory"
+cd ../
+
+# Remove logs directory
+rm -rf logs
+
+# Make TXT directory
+mkdir TXT
+cd TXT
+
+# Move files to TXT directory
+mv "../$file1" $file1
+mv "../$output" $output
+
+echo $PWD
+
+echo "Script finished. If variable 1 and variable 2 are in TXT folder you passed"
